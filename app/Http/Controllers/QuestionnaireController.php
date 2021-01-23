@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Questionnaire;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class QuestionnaireController extends Controller
 {
+
+    public function __construct()
+    {
+        return $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +21,9 @@ class QuestionnaireController extends Controller
      */
     public function index()
     {
-        //
+        $questionnaires = Questionnaire::latest()->paginate(5);
+
+        return view('questionnaire.index', compact('questionnaires'));
     }
 
     /**
@@ -24,7 +33,7 @@ class QuestionnaireController extends Controller
      */
     public function create()
     {
-        //
+        return view('questionnaire.create');
     }
 
     /**
@@ -33,9 +42,15 @@ class QuestionnaireController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+        Questionnaire::create([
+            'title' => request('title'),
+            'slug' => Str::slug(request('title')),
+            'description' => request('description'),
+        ]);
+
+        return redirect("/");
     }
 
     /**
@@ -46,7 +61,9 @@ class QuestionnaireController extends Controller
      */
     public function show(Questionnaire $questionnaire)
     {
-        //
+        $questionnaire->load('questions');
+
+        return view('questionnaire.show', compact('questionnaire'));
     }
 
     /**
@@ -57,7 +74,7 @@ class QuestionnaireController extends Controller
      */
     public function edit(Questionnaire $questionnaire)
     {
-        //
+        return view('questionnaire.edit', compact('questionnaire'));
     }
 
     /**
@@ -67,9 +84,15 @@ class QuestionnaireController extends Controller
      * @param  \App\Questionnaire  $questionnaire
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Questionnaire $questionnaire)
+    public function update(Questionnaire $questionnaire)
     {
-        //
+        $questionnaire->update([
+            'title' => request('title'),
+            'slug' => Str::slug(request('title')),
+            'description' => request('description'),
+        ]);
+
+        return redirect(route('questionnaires.index'));
     }
 
     /**
@@ -80,6 +103,5 @@ class QuestionnaireController extends Controller
      */
     public function destroy(Questionnaire $questionnaire)
     {
-        //
     }
 }

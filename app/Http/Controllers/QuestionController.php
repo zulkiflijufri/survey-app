@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Question;
+use App\Questionnaire;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -22,9 +24,9 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Questionnaire $questionnaire)
     {
-        //
+        return view('question.create', compact('questionnaire'));
     }
 
     /**
@@ -33,9 +35,35 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Questionnaire $questionnaire)
     {
-        //
+        if (request('type') == Question::TYPE_RADIO || request('type') == Question::TYPE_CHECKBOX) {
+            $data = [];
+            $options = request('options');
+
+            foreach ($options as $option) {
+                $data[] = $option;
+            }
+
+            $options = implode(',', $data);
+
+            $questionnaire->questions()->create([
+                'question_type' => request('type'),
+                'question_name' => request('question'),
+                'question_slug' => Str::slug(request('question')),
+                'question_desc' => request('description'),
+                'option_name' => $options,
+            ]);
+        } else if (request('type') == Question::TYPE_TEXT || request('type') == Question::TYPE_TEXTAREA) {
+            $questionnaire->questions()->create([
+                'question_type' => request('type'),
+                'question_name' => request('question'),
+                'question_slug' => Str::slug(request('question')),
+                'question_desc' => request('description'),
+            ]);
+        }
+
+        return redirect()->route('questionnaires.show', $questionnaire->slug);
     }
 
     /**
@@ -55,9 +83,9 @@ class QuestionController extends Controller
      * @param  \App\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function edit(Question $question)
+    public function edit(Questionnaire $questionnaire, Question $question)
     {
-        //
+        return view('question.edit', compact('questionnaire', 'question'));
     }
 
     /**
@@ -67,9 +95,35 @@ class QuestionController extends Controller
      * @param  \App\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Question $question)
+    public function update(Questionnaire $questionnaire, Question $question)
     {
-        //
+        if (request('type') == Question::TYPE_RADIO || request('type') == Question::TYPE_CHECKBOX) {
+            $data = [];
+            $options = request('options');
+
+            foreach ($options as $option) {
+                $data[] = $option;
+            }
+
+            $options = implode(',', $data);
+
+            $question->update([
+                'question_type' => request('type'),
+                'question_name' => request('question'),
+                'question_slug' => Str::slug(request('question')),
+                'question_desc' => request('description'),
+                'option_name' => $options,
+            ]);
+        } else if (request('type') == Question::TYPE_TEXT || request('type') == Question::TYPE_TEXTAREA) {
+            $question->update([
+                'question_type' => request('type'),
+                'question_name' => request('question'),
+                'question_slug' => Str::slug(request('question')),
+                'question_desc' => request('description'),
+            ]);
+        }
+
+        return redirect()->route('questionnaires.show', $questionnaire->slug);
     }
 
     /**
@@ -78,8 +132,10 @@ class QuestionController extends Controller
      * @param  \App\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Question $question)
+    public function destroy(Questionnaire $questionnaire, Question $question)
     {
-        //
+        $question->delete();
+
+        return back();
     }
 }

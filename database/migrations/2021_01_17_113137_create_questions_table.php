@@ -18,7 +18,7 @@ class CreateQuestionsTable extends Migration
             $table->string('question_type');
             $table->string('question_name');
             $table->string('question_slug');
-            $table->text('question_desc');
+            $table->text('question_desc')->nullable();
             $table->string('option_name')->nullable();
             $table->foreignId('questionnaire_id')->constrained();
             $table->timestamps();

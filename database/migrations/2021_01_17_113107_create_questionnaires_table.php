@@ -17,7 +17,7 @@ class CreateQuestionnairesTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
