@@ -13,6 +13,7 @@
                 <option value="text">Text</option>
                 <option value="textarea">Textarea</option>
                 <option value="checkbox">Checkbox</option>
+                <option value="number">Number</option>
                 <option value="radio">Radio</option>
             </select>
             <div class="form-outline mt-3" id="div-question" hidden>

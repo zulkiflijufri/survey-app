@@ -28,14 +28,18 @@
                         <!-- Collapsible wrapper -->
                         <div class="collapse navbar-collapse d-flex justify-content-center">
                             <!-- Left links -->
-                            <ul class="navbar-nav mb-2 mb-lg-0 px-1">
+                            <ul class="navbar-nav flex-row mb-2 mb-lg-0 px-1">
                                 @auth
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="/">Questionnaires</a>
+                                    <a class="nav-link{{ request()->is('/') ? ' active' : ''}}" href="/">
+                                        {{ config('app.email') == 'hello@zul.com' ? 'Questionnaires' : ''}}
+                                    </a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Respondents</a>
+                                    <a class="nav-link{{ request()->is('respondents') ? ' active' : ''}}" href="{{ route('responses.index') }}">
+                                        {{ config('app.email') == 'hello@zul.com' ? 'Respondents' : ''}}
+                                    </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Hello, {{ auth()->user()->name }}</a>

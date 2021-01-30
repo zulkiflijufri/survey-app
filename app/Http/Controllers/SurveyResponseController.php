@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Survey;
 use App\SurveyResponse;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,9 @@ class SurveyResponseController extends Controller
      */
     public function index()
     {
-        //
+        $surveys = Survey::latest()->paginate(10);
+
+        return view('response.index', compact('surveys'));
     }
 
     /**
@@ -44,9 +47,11 @@ class SurveyResponseController extends Controller
      * @param  \App\SurveyResponse  $surveyResponse
      * @return \Illuminate\Http\Response
      */
-    public function show(SurveyResponse $surveyResponse)
+    public function show(Survey $survey)
     {
-        //
+        $survey->load('responses');
+
+        return view('response.show', compact('survey'));
     }
 
     /**

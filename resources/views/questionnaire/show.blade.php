@@ -3,15 +3,18 @@
 @section('content')
 <div class="card" style="position: inherit">
     <div class="card-title text-center pt-2 px-3 font-bold">
-        <p class="lead" style="text-align: start;">
-            <strong>Questionnaire:</strong> {{ $questionnaire->title }}
-            <strong>{{ $questionnaire->description ? 'Description:' : '' }}</strong> {{ $questionnaire->description }}
+        <p class="lead">
+            {{ $questionnaire->title }}
+        </p>
+        <p class=" lead text-center" style="font-size: 14px">
+            ({{ $questionnaire->description }})
         </p>
     </div>
     <div class="card-body">
         <div class="fs-5 mb-2">List Questions</div>
         <div class="my-3">
             <a href="{{ route('questions.create', $questionnaire->slug) }}" class="btn btn-primary btn-floating"><i class="fas fa-plus"></i></a>
+            <a href="{{ route('surveys.show', $questionnaire->slug) }}" class="btn btn-primary btn-floating" target="_blank"><i class="fas fa-paper-plane"></i></a>
         </div>
         @foreach($questionnaire->questions as $key => $q)
         <ul class="list-group">

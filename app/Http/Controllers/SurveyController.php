@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Questionnaire;
 use App\Survey;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,6 @@ class SurveyController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -33,9 +33,21 @@ class SurveyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Questionnaire $questionnaire)
     {
-        //
+        // request()->validate([
+        //     'responses.*.answer' => 'required',
+        // ]);
+
+        // dd(request()->all());
+
+        $survey = $questionnaire->surveys()->create([
+            'user_id' => auth()->user()->id,
+        ]);
+
+        $survey->responses()->createMany(request('responses'));
+
+        return 'Thank you';
     }
 
     /**
@@ -44,9 +56,11 @@ class SurveyController extends Controller
      * @param  \App\Survey  $survey
      * @return \Illuminate\Http\Response
      */
-    public function show(Survey $survey)
+    public function show(Questionnaire $questionnaire)
     {
-        //
+        $questionnaire->load('questions');
+
+        return view('survey.show', compact('questionnaire'));
     }
 
     /**

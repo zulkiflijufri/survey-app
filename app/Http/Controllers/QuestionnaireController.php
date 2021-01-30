@@ -8,12 +8,6 @@ use Illuminate\Http\Request;
 
 class QuestionnaireController extends Controller
 {
-
-    public function __construct()
-    {
-        return $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -103,5 +97,10 @@ class QuestionnaireController extends Controller
      */
     public function destroy(Questionnaire $questionnaire)
     {
+        $questionnaire->questions()->delete();
+        $questionnaire->surveys()->delete();
+        $questionnaire->delete();
+
+        return back();
     }
 }

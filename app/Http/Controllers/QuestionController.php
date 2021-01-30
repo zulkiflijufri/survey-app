@@ -134,6 +134,7 @@ class QuestionController extends Controller
      */
     public function destroy(Questionnaire $questionnaire, Question $question)
     {
+        $question->responses()->delete();
         $question->delete();
 
         return back();
